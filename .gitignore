@@ -1,0 +1,6 @@
+.idea/
+.ipynb_checkpoints/
+poetry.lock
+.python-version
+.DS_Store
+.venv/
