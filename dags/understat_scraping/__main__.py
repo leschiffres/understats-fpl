@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 import datetime
 from airflow.hooks.base import BaseHook
-from understat_scraping.player_retrieval import player_retrieval
+from understat_scraping.player_retrieval import aggregated_player_retrieval, player_recent_matches_retrieval
 from understat_scraping.team_match_data_retrieval import team_past_matches_retrieval, team_match_data_retrieval
 
 CONNECTION_ID = "LOCAL_POSTGRES"
@@ -25,11 +25,18 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    # player_retrieval_task = PythonOperator(
-    #     task_id='player_retrieval',  # Unique task ID
-    #     python_callable=player_retrieval,
-    #     op_kwargs={'postgres_config':postgres_config}
-    # )
+    aggregated_player_retrieval_task = PythonOperator(
+        task_id='aggregated_player_retrieval',  # Unique task ID
+        python_callable=aggregated_player_retrieval,
+        op_kwargs={'postgres_config':postgres_config}
+    )
+    
+    player_recent_matches_retrieval_task = PythonOperator(
+        task_id='player_recent_matches',  # Unique task ID
+        python_callable=player_recent_matches_retrieval,
+        op_kwargs={'postgres_config':postgres_config}
+    )
+
 
     # team_past_matches_retrieval_task = PythonOperator(
     #     task_id='team_past_matches_retrieval',  # Unique task ID
@@ -37,10 +44,12 @@ with DAG(
     #     op_kwargs={'postgres_config':postgres_config}
     # )
 
-    team_future_matches_retrieval_task = PythonOperator(
-        task_id='team_match_data_retrieval',  # Unique task ID
-        python_callable=team_match_data_retrieval,
-        op_kwargs={'postgres_config':postgres_config}
-    )
+    # team_future_matches_retrieval_task = PythonOperator(
+    #     task_id='team_match_data_retrieval',  # Unique task ID
+    #     python_callable=team_match_data_retrieval,
+    #     op_kwargs={'postgres_config':postgres_config}
+    # )
 
-# player_retrieval_task >> team_match_data_task
+aggregated_player_retrieval_task >> player_recent_matches_retrieval_task
+
+# aggregated_player_retrieval_task >> team_match_data_task
