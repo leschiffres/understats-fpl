@@ -70,12 +70,15 @@ def player_recent_matches_retrieval(postgres_config):
     query = """select id, player_name, team_title as team from player where games > 3 and ("xG" + "xA") / games > 0.2"""
     pg_connection = psycopg2.connect(**postgres_config)
 
+
     # first we have to fetch the necessary information from the postgres universe table.
     with pg_connection.cursor(cursor_factory=psycopg2.extras.NamedTupleCursor) as pg_cur:
         pg_cur.execute(query)
         df = pd.DataFrame(pg_cur.fetchall())
 
     pg_connection.close()
+
+    print(f"Fetching data for {df.shape[0]} players.")
 
     # we keep a limited number of matches for each player
     NUMBER_OF_MATCHES=6

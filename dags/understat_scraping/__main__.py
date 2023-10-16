@@ -38,18 +38,17 @@ with DAG(
     )
 
 
-    # team_past_matches_retrieval_task = PythonOperator(
-    #     task_id='team_past_matches_retrieval',  # Unique task ID
-    #     python_callable=team_past_matches_retrieval,
-    #     op_kwargs={'postgres_config':postgres_config}
-    # )
+    team_past_matches_retrieval_task = PythonOperator(
+        task_id='team_past_matches_retrieval',  # Unique task ID
+        python_callable=team_past_matches_retrieval,
+        op_kwargs={'postgres_config':postgres_config}
+    )
 
-    # team_future_matches_retrieval_task = PythonOperator(
-    #     task_id='team_match_data_retrieval',  # Unique task ID
-    #     python_callable=team_match_data_retrieval,
-    #     op_kwargs={'postgres_config':postgres_config}
-    # )
+    team_future_matches_retrieval_task = PythonOperator(
+        task_id='team_match_data_retrieval',  # Unique task ID
+        python_callable=team_match_data_retrieval,
+        op_kwargs={'postgres_config':postgres_config}
+    )
 
 aggregated_player_retrieval_task >> player_recent_matches_retrieval_task
-
-# aggregated_player_retrieval_task >> team_match_data_task
+team_past_matches_retrieval_task >> team_future_matches_retrieval_task
