@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from sqlalchemy import create_engine
 import psycopg2.extras
 import psycopg2
-from understat_scraping.utils import SEASON, SLEEP_TIME_IN_SECONDS
+from utils.config import SEASON, SLEEP_TIME_IN_SECONDS
 
 CONNECTION_ID = "LOCAL_POSTGRES"
 url = 'https://understat.com/league/EPL/'

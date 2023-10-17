@@ -2,7 +2,8 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 import datetime
 from airflow.hooks.base import BaseHook
-from transformation_layer.team_transformation import team_form
+from transformation_layer.team_transformation import team_form, team_future_opponents_ratings
+from transformation_layer.player_transformation import player_form
 
 CONNECTION_ID = "LOCAL_POSTGRES"
 
@@ -24,8 +25,20 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    team_forml_task = PythonOperator(
+    team_form_task = PythonOperator(
         task_id='team_form',  # Unique task ID
         python_callable=team_form,
+        op_kwargs={'postgres_config':postgres_config}
+    )
+
+    team_future_opponents_ratings_task = PythonOperator(
+        task_id='team_future_opponents_ratings',  # Unique task ID
+        python_callable=team_future_opponents_ratings,
+        op_kwargs={'postgres_config':postgres_config}
+    )
+
+    player_form_task = PythonOperator(
+        task_id='player_form',  # Unique task ID
+        python_callable=player_form,
         op_kwargs={'postgres_config':postgres_config}
     )
