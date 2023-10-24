@@ -40,3 +40,15 @@ airflow standalone
 ```
 
 Please note that there needs to be a `.env` file with the database credentials as in the `env.example` file.
+
+Now airflow should be running at [http://localhost:8080/](http://localhost:8080/), where you can start the dag `undestat_scraping` and once the dag finishes start the `transformation_layer` dag to fully populate the tables needed.
+
+Then to get some visualization and insights, please start a new terminal and run 
+
+```bash
+source bin/activate
+export $(grep -v '^#' .env | xargs)
+jupyter notebook
+``` 
+
+and then open the `visualizations.ipynb` file.
